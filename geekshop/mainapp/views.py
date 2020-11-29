@@ -1,25 +1,25 @@
-from django.shortcuts import render
-from django.conf import settings
-import json, os
+import json
+import os
 
+from django.conf import settings
+from django.shortcuts import render
+
+from mainapp.models import Product, ProductCategory
 
 # Create your views here.
 
 def main(request):
+    title = 'главная'
+    products = Product.objects.all()[:4]
     content = {
-        'title': 'Главная'
+        'title': title,
+        'products': products,
     }
     return render(request, 'mainapp/index.html', content)
 
 
-def products(request):
-    links_menu = [
-        {'href': 'products_all', 'name': 'все'},
-        {'href': 'products_home', 'name': 'дом'},
-        {'href': 'products_office', 'name': 'офис'},
-        {'href': 'products_modern', 'name': 'модерн'},
-        {'href': 'products_classic', 'name': 'классика'},
-    ]
+def products(request, pk=None):
+    links_menu = ProductCategory.objects.all()
     content = {
         'title': 'Продукты',
         'links_menu': links_menu,
@@ -31,84 +31,9 @@ def contacts(request):
     file = os.path.join(settings.BASE_DIR, 'address.json')
     with open(file) as obj:
         address = json.load(obj)
-    print(address)
+        
     content = {
         'title': 'Контакты',
         'address': address,
     }
     return render(request, 'mainapp/contact.html', content)
-
-
-def products_all(request):
-    links_menu = [
-        {'href': 'products_all', 'name': 'все'},
-        {'href': 'products_home', 'name': 'дом'},
-        {'href': 'products_office', 'name': 'офис'},
-        {'href': 'products_modern', 'name': 'модерн'},
-        {'href': 'products_classic', 'name': 'классика'},
-    ]
-    content = {
-        'title': 'Продукты',
-        'links_menu': links_menu,
-    }
-    return render(request, 'mainapp/products.html', content)
-
-
-def products_home(request):
-    links_menu = [
-        {'href': 'products_all', 'name': 'все'},
-        {'href': 'products_home', 'name': 'дом'},
-        {'href': 'products_office', 'name': 'офис'},
-        {'href': 'products_modern', 'name': 'модерн'},
-        {'href': 'products_classic', 'name': 'классика'},
-    ]
-    content = {
-        'title': 'Продукты',
-        'links_menu': links_menu,
-    }
-    return render(request, 'mainapp/products.html', content)
-
-
-def products_office(request):
-    links_menu = [
-        {'href': 'products_all', 'name': 'все'},
-        {'href': 'products_home', 'name': 'дом'},
-        {'href': 'products_office', 'name': 'офис'},
-        {'href': 'products_modern', 'name': 'модерн'},
-        {'href': 'products_classic', 'name': 'классика'},
-    ]
-    content = {
-        'title': 'Продукты',
-        'links_menu': links_menu,
-    }
-    return render(request, 'mainapp/products.html', content)
-
-
-def products_modern(request):
-    links_menu = [
-        {'href': 'products_all', 'name': 'все'},
-        {'href': 'products_home', 'name': 'дом'},
-        {'href': 'products_office', 'name': 'офис'},
-        {'href': 'products_modern', 'name': 'модерн'},
-        {'href': 'products_classic', 'name': 'классика'},
-    ]
-    content = {
-        'title': 'Продукты',
-        'links_menu': links_menu,
-    }
-    return render(request, 'mainapp/products.html', content)
-
-
-def products_classic(request):
-    links_menu = [
-        {'href': 'products_all', 'name': 'все'},
-        {'href': 'products_home', 'name': 'дом'},
-        {'href': 'products_office', 'name': 'офис'},
-        {'href': 'products_modern', 'name': 'модерн'},
-        {'href': 'products_classic', 'name': 'классика'},
-    ]
-    content = {
-        'title': 'Продукты',
-        'links_menu': links_menu,
-    }
-    return render(request, 'mainapp/products.html', content)
