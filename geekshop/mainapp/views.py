@@ -8,6 +8,7 @@ from mainapp.models import Product, ProductCategory
 
 # Create your views here.
 
+
 def main(request):
     title = 'главная'
     products = Product.objects.all()[:4]
@@ -19,21 +20,24 @@ def main(request):
 
 
 def products(request, pk=None):
+    title = 'продукты'
     links_menu = ProductCategory.objects.all()
     content = {
-        'title': 'Продукты',
+        'title': title,
         'links_menu': links_menu,
     }
     return render(request, 'mainapp/products.html', content)
 
 
 def contacts(request):
-    file = os.path.join(settings.BASE_DIR, 'address.json')
-    with open(file) as obj:
+    title = 'контакты'
+    file = os.path.join(settings.BASE_DIR,
+                        'mainapp/json/contact__locations.json')
+    with open(file, encoding='utf-8') as obj:
         address = json.load(obj)
-        
+
     content = {
-        'title': 'Контакты',
+        'title': title,
         'address': address,
     }
     return render(request, 'mainapp/contact.html', content)
