@@ -1,4 +1,10 @@
+basketapp/__pycache__/
+basketapp/migrations/__pycache/
+authapp/__pycache__/
+authapp/migrations/__pycache__/
 geekshop/__pycache__/
 mainapp/__pycache__/
 mainapp/migrations/__pycache__/
+mainapp/management/commands/__pycache__/
 .idea/
+
