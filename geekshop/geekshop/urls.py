@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls import handler404
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
@@ -17,6 +18,8 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 ]
+
+handler404 = 'mainapp.views.error_404'
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

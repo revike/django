@@ -1,5 +1,6 @@
 import json
 import os
+import random
 
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
@@ -10,16 +11,29 @@ from mainapp.models import Product, ProductCategory
 # Create your views here.
 
 
+def get_basket(user):
+    if user.is_authenticated:
+        return Basket.objects.filter(user=user)
+    return []
+
+
+def get_hot_product():
+    products_list = Product.objects.all()
+    return random.sample(list(products_list), 1)[0]
+
+
+def get_same_products(hot_product):
+    return Product.objects.filter(category__pk=hot_product.category.pk).exclude(pk=hot_product.pk)[:3]
+
+
 def main(request):
     title = 'главная'
     products = Product.objects.all()[:4]
-    basket = []
-    if request.user.is_authenticated:
-        basket = Basket.objects.filter(user=request.user)
+
     content = {
         'title': title,
         'products': products,
-        'basket': basket
+        'basket': get_basket(request.user)
     }
     return render(request, 'mainapp/index.html', content)
 
@@ -27,10 +41,6 @@ def main(request):
 def products(request, pk=None):
     title = 'продукты'
     links_menu = ProductCategory.objects.all()
-
-    basket = []
-    if request.user.is_authenticated:
-        basket = Basket.objects.filter(user=request.user)
 
     if pk is not None:
         if pk == 0:
@@ -48,19 +58,33 @@ def products(request, pk=None):
             'links_menu': links_menu,
             'products': products_list,
             'category': category,
-            'basket': basket
+            'basket': get_basket(request.user)
         }
 
         return render(request, 'mainapp/products_list.html', content)
 
-    same_products = Product.objects.all()[3:5]
+    hot_product = get_hot_product()
+    same_products = get_same_products(hot_product)
+
     content = {
         'title': title,
         'links_menu': links_menu,
         'same_products': same_products,
-        'basket': basket
+        'basket': get_basket(request.user),
+        'hot_product': hot_product,
     }
     return render(request, 'mainapp/products.html', content)
+
+
+def product(requests, pk):
+    title = 'продукты'
+    content = {
+        'title': title,
+        'links_menu': ProductCategory.objects.all(),
+        'product': get_object_or_404(Product, pk=pk),
+        'basket': get_basket(requests.user)
+    }
+    return render(requests, 'mainapp/product.html', content)
 
 
 def contacts(request):
@@ -70,13 +94,14 @@ def contacts(request):
     with open(file, encoding='utf-8') as obj:
         address = json.load(obj)
 
-    basket = []
-    if request.user.is_authenticated:
-        basket = Basket.objects.filter(user=request.user)
-
     content = {
         'title': title,
         'address': address,
-        'basket': basket
+        'basket': get_basket(request.user)
     }
     return render(request, 'mainapp/contact.html', content)
+
+
+def error_404(request, exception):
+    # Выборка из базы, преобразование данных и т.п.
+    return render(request, '404.html', {'item': 'Своя страница 404'}, status=404)
