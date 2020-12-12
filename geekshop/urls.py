@@ -16,7 +16,9 @@ urlpatterns = [
 
     path('basket/', include('basketapp.urls', namespace='basket')),
 
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+
+    path('admin/', include('adminapp.urls', namespace='admin'))
 ]
 
 handler404 = 'mainapp.views.error_404'

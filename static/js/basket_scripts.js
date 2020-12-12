@@ -43,19 +43,17 @@ window.onload = function () {
         event.preventDefault();
     });
 
-    // $('.basket_list').on('click', 'button[class="btn"]', function () {
-    //     let target_href = event.target;
-    //
-    //     if (target_href) {
-    //         $.ajax( {
-    //             url: "/basket/edit/" + target_href.name + "/" + target_href.value + "/",
-    //
-    //             success: function (data) {
-    //                 $('.basket_list').html(data.result);
-    //             },
-    //         });
-    //     }
-    //     event.preventDefault();
-    // });
+    $('.basket_list').on('click', '.button-delete', function () {
+        let pk = $(this).attr('data-pk');
+        if (pk) {
+            $.ajax({
+                url:"/basket/delete/ajax/" + pk + "/",
 
+                success: function(data) {
+                    $('.basket_list').html(data.result);
+                }
+            });
+        }
+        return;
+    });
 };
