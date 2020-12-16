@@ -38,7 +38,7 @@ class ShopUserRegisterForm(UserCreationForm):
         email_data = ShopUser.objects.filter(email=email_user)
         if email_data:
             raise forms.ValidationError(
-                'Пользовутель с таким email уже зарегистрирован'
+                'Пользователь с таким email уже зарегистрирован'
             )
         return email_user
 
@@ -62,12 +62,3 @@ class ShopUserEditForm(UserChangeForm):
         if age < 18:
             raise forms.ValidationError('Вы слишком молоды')
         return age
-
-    def clean_email(self):
-        email_user = self.cleaned_data['email']
-        email_data = ShopUser.objects.filter(email=email_user)
-        if email_data:
-            raise forms.ValidationError(
-                'Пользовутель с таким email уже зарегистрирован'
-            )
-        return email_user
