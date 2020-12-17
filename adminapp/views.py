@@ -111,7 +111,7 @@ def user_delete(request, pk):
 
 
 class ProductCategoryCreateView(CreateView):
-    models = ProductCategory
+    model = ProductCategory
     template_name = 'adminapp/category_update.html'
     success_url = reverse_lazy('adminapp:categories')
     form_class = ProductCategoryEditForm
@@ -154,7 +154,7 @@ def categories(request):
 
 
 class ProductCategoryUpdateView(UpdateView):
-    models = ProductCategory
+    model = ProductCategory
     template_name = 'adminapp/category_update.html'
     success_url = reverse_lazy('adminapp:categories')
     form_class = ProductCategoryEditForm
