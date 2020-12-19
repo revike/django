@@ -11,12 +11,6 @@ from mainapp.models import Product, ProductCategory
 # Create your views here.
 
 
-def get_basket(user):
-    if user.is_authenticated:
-        return Basket.objects.filter(user=user)
-    return []
-
-
 def get_hot_product():
     products_list = Product.objects.all()
     return random.sample(list(products_list), 1)[0]
@@ -33,7 +27,6 @@ def main(request):
     content = {
         'title': title,
         'products': products,
-        'basket': get_basket(request.user)
     }
     return render(request, 'mainapp/index.html', content)
 
@@ -53,7 +46,7 @@ def products(request, pk=None, page=1):
             category = get_object_or_404(ProductCategory, pk=pk)
             products_list = Product.objects.filter(category__pk=pk)
 
-        paginator = Paginator(products_list, 2)
+        paginator = Paginator(products_list, 4)
         try:
             product_paginator = paginator.page(page)
         except PageNotAnInteger:
@@ -66,7 +59,6 @@ def products(request, pk=None, page=1):
             'links_menu': links_menu,
             'products': product_paginator,
             'category': category,
-            'basket': get_basket(request.user)
         }
 
         return render(request, 'mainapp/products_list.html', content)
@@ -78,7 +70,6 @@ def products(request, pk=None, page=1):
         'title': title,
         'links_menu': links_menu,
         'same_products': same_products,
-        'basket': get_basket(request.user),
         'hot_product': hot_product,
     }
     return render(request, 'mainapp/products.html', content)
@@ -90,7 +81,6 @@ def product(requests, pk):
         'title': title,
         'links_menu': ProductCategory.objects.all(),
         'product': get_object_or_404(Product, pk=pk),
-        'basket': get_basket(requests.user)
     }
     return render(requests, 'mainapp/product.html', content)
 
@@ -105,7 +95,6 @@ def contacts(request):
     content = {
         'title': title,
         'address': address,
-        'basket': get_basket(request.user)
     }
     return render(request, 'mainapp/contact.html', content)
 

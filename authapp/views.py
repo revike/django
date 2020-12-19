@@ -1,8 +1,33 @@
+from django.conf import settings
 from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
 from django.contrib import auth
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from authapp.models import ShopUser
+from django.core.mail import send_mail
+
+
+def send_verify_email(user):
+    verify_link = reverse('auth:verify', args=[
+                          user.email, user.activation_key])
+    subject = 'Подтверждение учетной записи'
+    message = f'Для подтверждения учетной записи {user.username} на портале \
+    {settings.DOMAIN_NAME} перейдите по ссылке: \n{settings.DOMAIN_NAME}{verify_link}'
+    return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+
+
+def verify(request, email, activation_key):
+    try:
+        user = ShopUser.objects.get(email=email)
+        if user.activation_key == activation_key and not user.is_activation_key_expired():
+            user.activation_key = ''
+            user.is_active = True
+            user.save()
+            auth.login(request, user)
+        return render(request, 'authapp/verification.html')
+    except Exception as e:
+        print('error')
 
 
 def login(request):
@@ -19,7 +44,7 @@ def login(request):
             return HttpResponseRedirect(reverse('main'))
 
     content = {
-        'title': 'qwe',
+        'title': 'вход',
         'login_form': login_form,
         'next': next_url
     }
@@ -35,12 +60,17 @@ def register(request):
     if request.method == 'POST':
         register_form = ShopUserRegisterForm(request.POST, request.FILES)
         if register_form.is_valid():
-            register_form.save()
+            user = register_form.save()
+            if send_verify_email(user):
+                print('success')
+            else:
+                print('error')
             return HttpResponseRedirect(reverse('auth:login'))
     else:
         register_form = ShopUserRegisterForm()
 
     content = {
+        'title': 'регистрция',
         'register_form': register_form
     }
     return render(request, 'authapp/register.html', content)
@@ -48,7 +78,8 @@ def register(request):
 
 def edit(request):
     if request.method == 'POST':
-        edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
+        edit_form = ShopUserEditForm(
+            request.POST, request.FILES, instance=request.user)
         if edit_form.is_valid():
             edit_form.save()
             return HttpResponseRedirect(reverse('auth:edit'))
