@@ -8,6 +8,6 @@ mainapp/management/commands/__pycache__/
 adminapp/__pycache__/
 adminapp/migrations/__pycache/
 geekshop/__pycache__/
+geekshop/vk.json
 .idea/
 .vscode/
-

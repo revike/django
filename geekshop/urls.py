@@ -18,7 +18,9 @@ urlpatterns = [
 
     # path('admin/', admin.site.urls),
 
-    path('admin/', include('adminapp.urls', namespace='admin'))
+    path('admin/', include('adminapp.urls', namespace='admin')),
+
+    path('', include('social_django.urls', namespace='social')),
 ]
 
 handler404 = 'mainapp.views.error_404'
