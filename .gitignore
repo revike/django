@@ -9,5 +9,7 @@ adminapp/__pycache__/
 adminapp/migrations/__pycache/
 geekshop/__pycache__/
 geekshop/vk.json
+ordersapp/__pycache__/
+ordersapp/migrations/__pycache/
 .idea/
 .vscode/
