@@ -21,6 +21,8 @@ urlpatterns = [
     path('admin/', include('adminapp.urls', namespace='admin')),
 
     path('', include('social_django.urls', namespace='social')),
+
+    path('order/', include('ordersapp.urls', namespace='order')),
 ]
 
 handler404 = 'mainapp.views.error_404'
