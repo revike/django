@@ -112,6 +112,14 @@
         "documentation": {}
     },
     {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
         "label": "admin",
         "importPath": "django.contrib",
         "description": "django.contrib",
@@ -1321,11 +1329,36 @@
         "documentation": {}
     },
     {
+        "label": "receiver",
+        "importPath": "django.dispatch",
+        "description": "django.dispatch",
+        "isExtraImport": true,
+        "detail": "django.dispatch",
+        "documentation": {}
+    },
+    {
         "label": "post_save",
         "importPath": "django.db.models.signals",
         "description": "django.db.models.signals",
         "isExtraImport": true,
         "detail": "django.db.models.signals",
+        "documentation": {}
+    },
+    {
+        "label": "pre_save",
+        "importPath": "django.db.models.signals",
+        "description": "django.db.models.signals",
+        "isExtraImport": true,
+        "detail": "django.db.models.signals",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
         "documentation": {}
     },
     {
@@ -1375,6 +1408,23 @@
         "description": "social_core.exceptions",
         "isExtraImport": true,
         "detail": "social_core.exceptions",
+        "documentation": {}
+    },
+    {
+        "label": "urllib.request",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "urllib.request",
+        "description": "urllib.request",
+        "detail": "urllib.request",
+        "documentation": {}
+    },
+    {
+        "label": "MEDIA_ROOT",
+        "importPath": "geekshop.settings",
+        "description": "geekshop.settings",
+        "isExtraImport": true,
+        "detail": "geekshop.settings",
         "documentation": {}
     },
     {
@@ -1457,15 +1507,6 @@
         "description": "django.template.loader",
         "isExtraImport": true,
         "detail": "django.template.loader",
-        "documentation": {}
-    },
-    {
-        "label": "os",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "os",
-        "description": "os",
-        "detail": "os",
         "documentation": {}
     },
     {
@@ -1968,7 +2009,7 @@
         "kind": 2,
         "importPath": "authapp.pipeline",
         "description": "authapp.pipeline",
-        "peekOfCode": "def save_user_profile(backend, user, response, *args, **kwargs):\n    if backend.name != 'vk-oauth2':\n        return\n    api_url = urlunparse(\n        ('https',\n         'api.vk.com',\n         '/method/users.get',\n         None,\n         urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about')),\n                               access_token=response['access_token'],",
+        "peekOfCode": "def save_user_profile(backend, user, response, *args, **kwargs):\n    if backend.name != 'vk-oauth2':\n        return\n    api_url = urlunparse(\n        ('https',\n         'api.vk.com',\n         '/method/users.get',\n         None,\n         urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'photo_200_orig')),\n                               access_token=response['access_token'],",
         "detail": "authapp.pipeline",
         "documentation": {}
     },
@@ -2067,7 +2108,7 @@
         "kind": 6,
         "importPath": "basketapp.models",
         "description": "basketapp.models",
-        "peekOfCode": "class Basket(models.Model):\n    user = models.ForeignKey(\n        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='basket')\n    product = models.ForeignKey(Product, on_delete=models.CASCADE)\n    quantity = models.PositiveIntegerField(\n        verbose_name='количество', default=0)\n    add_datetime = models.DateTimeField(\n        auto_now_add=True, verbose_name='время')\n    @property\n    def product_cost(self):",
+        "peekOfCode": "class Basket(models.Model):\n    # objects = BasketQuerySet.as_manager()\n    user = models.ForeignKey(\n        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='basket')\n    product = models.ForeignKey(Product, on_delete=models.CASCADE)\n    quantity = models.PositiveIntegerField(\n        verbose_name='количество', default=0)\n    add_datetime = models.DateTimeField(\n        auto_now_add=True, verbose_name='время')\n    @property",
         "detail": "basketapp.models",
         "documentation": {}
     },
@@ -2805,7 +2846,7 @@
         "kind": 6,
         "importPath": "ordersapp.views",
         "description": "ordersapp.views",
-        "peekOfCode": "class OrderDetailView(DetailView):\n    model = Order\ndef order_forming_complete(request, pk):\n    order = get_object_or_404(Order, pk=pk)\n    order.status = Order.SEND_TO_PROCEED\n    order.save()\n    return HttpResponseRedirect(reverse('order:orders_list'))",
+        "peekOfCode": "class OrderDetailView(DetailView):\n    model = Order\ndef order_forming_complete(request, pk):\n    order = get_object_or_404(Order, pk=pk)\n    order.status = Order.SEND_TO_PROCEED\n    order.save()\n    return HttpResponseRedirect(reverse('order:orders_list'))\n@receiver(pre_save, sender=OrderItem)\n@receiver(pre_save, sender=Basket)\ndef product_quantity_update_save(sender, update_fields, instance, **kwargs):",
         "detail": "ordersapp.views",
         "documentation": {}
     },
@@ -2814,7 +2855,25 @@
         "kind": 2,
         "importPath": "ordersapp.views",
         "description": "ordersapp.views",
-        "peekOfCode": "def order_forming_complete(request, pk):\n    order = get_object_or_404(Order, pk=pk)\n    order.status = Order.SEND_TO_PROCEED\n    order.save()\n    return HttpResponseRedirect(reverse('order:orders_list'))",
+        "peekOfCode": "def order_forming_complete(request, pk):\n    order = get_object_or_404(Order, pk=pk)\n    order.status = Order.SEND_TO_PROCEED\n    order.save()\n    return HttpResponseRedirect(reverse('order:orders_list'))\n@receiver(pre_save, sender=OrderItem)\n@receiver(pre_save, sender=Basket)\ndef product_quantity_update_save(sender, update_fields, instance, **kwargs):\n    if update_fields is 'quantity' or 'product':\n        if instance.pk:",
+        "detail": "ordersapp.views",
+        "documentation": {}
+    },
+    {
+        "label": "product_quantity_update_save",
+        "kind": 2,
+        "importPath": "ordersapp.views",
+        "description": "ordersapp.views",
+        "peekOfCode": "def product_quantity_update_save(sender, update_fields, instance, **kwargs):\n    if update_fields is 'quantity' or 'product':\n        if instance.pk:\n            instance.product.quantity -= instance.quantity - sender.get_item(instance.pk).quantity\n        else:\n            instance.product.quantity -= instance.quantity\n        instance.product.save()\n@receiver(pre_save, sender=OrderItem)\n@receiver(pre_save, sender=Basket)\ndef product_quantity_update_delete(sender, instance, **kwargs):",
+        "detail": "ordersapp.views",
+        "documentation": {}
+    },
+    {
+        "label": "product_quantity_update_delete",
+        "kind": 2,
+        "importPath": "ordersapp.views",
+        "description": "ordersapp.views",
+        "peekOfCode": "def product_quantity_update_delete(sender, instance, **kwargs):\n    instance.product.quantity += instance.quantity\n    instance.product.save()",
         "detail": "ordersapp.views",
         "documentation": {}
     },

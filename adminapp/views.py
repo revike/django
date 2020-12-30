@@ -419,11 +419,13 @@ class ProductUpdateView(UpdateView):
     def get_success_url(self):
         pk = self.kwargs['pk']
         product_item = Product.objects.get(pk=pk)
-        return reverse_lazy('adminapp:products', args=[product_item.category__pk])
+        return reverse_lazy('adminapp:products', args=[product_item.category_id])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'продукт/редактирование'
+        update_product = get_object_or_404(Product, pk=self.kwargs['pk'])
+        context['category'] = update_product.category
         return context
 
 
