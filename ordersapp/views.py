@@ -121,7 +121,7 @@ def order_forming_complete(request, pk):
 
 
 @receiver(pre_save, sender=OrderItem)
-@receiver(pre_save, sender=Basket)
+# @receiver(pre_save, sender=Basket)
 def product_quantity_update_save(sender, update_fields, instance, **kwargs):
     if update_fields is 'quantity' or 'product':
         if instance.pk:
@@ -132,7 +132,6 @@ def product_quantity_update_save(sender, update_fields, instance, **kwargs):
 
 
 @receiver(pre_save, sender=OrderItem)
-@receiver(pre_save, sender=Basket)
+# @receiver(pre_save, sender=Basket)
 def product_quantity_update_delete(sender, instance, **kwargs):
-    instance.product.quantity += instance.quantity
-    instance.product.save()
+    instance.product.quantity -= instance.quantity

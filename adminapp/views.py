@@ -1,5 +1,3 @@
-from django.db.models import query, query_utils
-from mainapp.views import product, products
 from authapp.forms import ShopUserEditForm, ShopUserRegisterForm
 from authapp.models import ShopUser
 from django.contrib.auth.decorators import user_passes_test
@@ -11,8 +9,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
 from mainapp.models import Product, ProductCategory
 
-from adminapp.forms import (ProductCategoryEditForm, ProductEditForm,
-                            ShopUserAdminEditForm)
+from adminapp.forms import (ProductCategoryEditForm, ProductEditForm)
 
 # users
 
@@ -276,7 +273,10 @@ class ProductCategoryDeleteView(DeleteView):
 
     def delete(self, *args, **kwargs):
         self.object = self.get_object()
-        self.object.is_active = False
+        if self.object.is_active == True:
+            self.object.is_active = False
+        else:
+            self.object.is_active = True
         self.object.save()
 
         return HttpResponseRedirect(self.get_success_url())

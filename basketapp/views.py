@@ -34,7 +34,7 @@ def add(request, pk):
     basket_item.quantity += 1
     basket_item.save()
 
-    # возвращаем на ту строницу, откуда пользователь пришел (request.META.get('HTTP_REFERER'))
+    # возвращаем на ту страницу, откуда пользователь пришел (request.META.get('HTTP_REFERER'))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -46,9 +46,14 @@ def add(request, pk):
 
 
 @login_required
-def delete_ajax(request, pk):
+def delete_ajax(request, pk, quantity):
     if request.is_ajax():
         basket_for_delete = Basket.objects.get(pk=pk)
+        basket_for_delete.quantity = quantity
+        basket_for_delete.save()
+        product_quantity = Product.objects.get(basket__user_id=request.user.id).quantity
+        product_quantity += basket_for_delete.quantity
+        basket_for_delete.save()
         basket_for_delete.delete()
 
     basket_items = Basket.objects.filter(
@@ -73,6 +78,8 @@ def edit(request, pk, quantity):
             new_basket_item.quantity = quantity
             new_basket_item.save()
         else:
+            new_basket_item.quantity = quantity
+            new_basket_item.save()
             new_basket_item.delete()
 
         basket_items = Basket.objects.filter(

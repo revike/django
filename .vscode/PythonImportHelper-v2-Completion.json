@@ -320,6 +320,14 @@
         "documentation": {}
     },
     {
+        "label": "Product",
+        "importPath": "mainapp.models",
+        "description": "mainapp.models",
+        "isExtraImport": true,
+        "detail": "mainapp.models",
+        "documentation": {}
+    },
+    {
         "label": "ShopUser",
         "importPath": "authapp.models",
         "description": "authapp.models",
@@ -1485,14 +1493,6 @@
         "documentation": {}
     },
     {
-        "label": "Basket",
-        "importPath": "basketapp.models",
-        "description": "basketapp.models",
-        "isExtraImport": true,
-        "detail": "basketapp.models",
-        "documentation": {}
-    },
-    {
         "label": "basketapp.views",
         "kind": 6,
         "isExtraImport": true,
@@ -1829,7 +1829,7 @@
         "kind": 6,
         "importPath": "adminapp.views",
         "description": "adminapp.views",
-        "peekOfCode": "class ProductCategoryDeleteView(DeleteView):\n    model = ProductCategory\n    template_name = 'adminapp/category_delete.html'\n    success_url = reverse_lazy('adminapp:categories')\n    def delete(self, *args, **kwargs):\n        self.object = self.get_object()\n        self.object.is_active = False\n        self.object.save()\n        return HttpResponseRedirect(self.get_success_url())\n    @method_decorator(user_passes_test(lambda u: u.is_superuser))",
+        "peekOfCode": "class ProductCategoryDeleteView(DeleteView):\n    model = ProductCategory\n    template_name = 'adminapp/category_delete.html'\n    success_url = reverse_lazy('adminapp:categories')\n    def delete(self, *args, **kwargs):\n        self.object = self.get_object()\n        if self.object.is_active == True:\n            self.object.is_active = False\n        else:\n            self.object.is_active = True",
         "detail": "adminapp.views",
         "documentation": {}
     },
@@ -2765,7 +2765,7 @@
         "kind": 6,
         "importPath": "ordersapp.forms",
         "description": "ordersapp.forms",
-        "peekOfCode": "class OrderItemForm(forms.ModelForm):\n    class Meta:\n        model = OrderItem\n        fields = '__all__'\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)\n        for field_name, field in self.fields.items():\n            field.widget.attrs['class'] = 'form-control'\n            field.help_text = ''",
+        "peekOfCode": "class OrderItemForm(forms.ModelForm):\n    price = forms.CharField(label='цена', required=False)\n    class Meta:\n        model = OrderItem\n        fields = '__all__'\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)\n        for field_name, field in self.fields.items():\n            field.widget.attrs['class'] = 'form-control'\n            field.help_text = ''",
         "detail": "ordersapp.forms",
         "documentation": {}
     },

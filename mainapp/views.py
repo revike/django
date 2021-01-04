@@ -5,14 +5,15 @@ import random
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from basketapp.models import Basket
+from django.views.generic import ListView
+
 from mainapp.models import Product, ProductCategory
 
 # Create your views here.
 
 
 def get_hot_product():
-    products_list = Product.objects.all()
+    products_list = Product.objects.filter(is_active=True)
     return random.sample(list(products_list), 1)[0]
 
 
@@ -22,7 +23,7 @@ def get_same_products(hot_product):
 
 def main(request):
     title = 'главная'
-    products = Product.objects.all()[:4]
+    products = Product.objects.filter(is_active=True)[:4]
 
     content = {
         'title': title,
@@ -33,18 +34,18 @@ def main(request):
 
 def products(request, pk=None, page=1):
     title = 'продукты'
-    links_menu = ProductCategory.objects.all()
+    links_menu = ProductCategory.objects.filter(is_active=True)
 
     if pk is not None:
         if pk == 0:
-            products_list = Product.objects.all()
+            products_list = Product.objects.filter(is_active=True)
             category = {
                 'name': 'все',
                 'pk': 0
             }
         else:
             category = get_object_or_404(ProductCategory, pk=pk)
-            products_list = Product.objects.filter(category__pk=pk)
+            products_list = Product.objects.filter(category__pk=pk, is_active=True)
 
         paginator = Paginator(products_list, 4)
         try:
@@ -79,7 +80,7 @@ def product(requests, pk):
     title = 'продукты'
     content = {
         'title': title,
-        'links_menu': ProductCategory.objects.all(),
+        'links_menu': ProductCategory.objects.filter(is_active=True),
         'product': get_object_or_404(Product, pk=pk),
     }
     return render(requests, 'mainapp/product.html', content)
