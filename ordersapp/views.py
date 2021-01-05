@@ -59,7 +59,10 @@ class OrderCreateView(CreateView):
             self.object = form.save()
             if orderitems.is_valid():
                 orderitems.instance = self.object
-                orderitems.save()
+                try:
+                    orderitems.save()
+                except:
+                    pass
 
         if self.object.get_total_cost == 0:
             self.object.delete()
@@ -99,7 +102,10 @@ class OrderUpdateView(UpdateView):
             self.object = form.save()
             if orderitems.is_valid():
                 orderitems.instance = self.object
-                orderitems.save()
+                try:
+                    orderitems.save()
+                except:
+                    pass
 
         return super().form_valid(form)
 
