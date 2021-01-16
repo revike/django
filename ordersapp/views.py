@@ -1,5 +1,4 @@
 from django.db.models.signals import pre_save
-
 from basketapp.models import Basket
 from django.db import transaction
 from django.forms import inlineformset_factory

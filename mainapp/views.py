@@ -18,12 +18,13 @@ def get_hot_product():
 
 
 def get_same_products(hot_product):
-    return Product.objects.filter(category__pk=hot_product.category.pk).exclude(pk=hot_product.pk)[:3]
+    return Product.objects.filter(category__pk=hot_product.category.pk).exclude(pk=hot_product.pk)[:3].select_related()
 
 
 def main(request):
     title = 'главная'
-    products = Product.objects.filter(is_active=True)[:4]
+    # products = Product.objects.filter(is_active=True)[:4]
+    products = Product.objects.filter(is_active=True, category__is_active=True).select_related('category')[:4]
 
     content = {
         'title': title,

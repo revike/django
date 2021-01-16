@@ -1,0 +1,12 @@
+http://localhost:8088/products/
+http://localhost:8088/
+http://localhost:8088/products/category/1
+http://localhost:8088/products/product/1
+http://localhost:8088/products/category/2
+http://localhost:8088/products/product/2
+http://localhost:8088/products/category/3
+http://localhost:8088/products/product/3
+http://localhost:8088/products/category/4
+http://localhost:8088/products/product/4
+http://localhost:8088/order/
+http://localhost:8088/admin/users/read/
