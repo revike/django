@@ -45,10 +45,9 @@ window.onload = function () {
 
     $('.basket_list').on('click', '.button-delete', function () {
         let pk = $(this).attr('data-pk');
-        let value = $(this).attr('value');
         if (pk) {
             $.ajax({
-                url:"/basket/delete/ajax/" + pk + "/" + value + "/",
+                url:"/basket/delete/ajax/" + pk + "/",
 
                 success: function(data) {
                     $('.basket_list').html(data.result);

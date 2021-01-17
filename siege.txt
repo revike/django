@@ -1,0 +1,50 @@
+siege -f /home/django/django/urls.txt -d1 -r29 -c1
+
+Transactions:                    202 hits
+Availability:                  97.58 %
+Elapsed time:                 106.71 secs
+Data transferred:               7.10 MB
+Response time:                  0.00 secs
+Transaction rate:               1.89 trans/sec
+Throughput:                     0.07 MB/sec
+Concurrency:                    0.01
+Successful transactions:         200
+Failed transactions:               5
+Longest transaction:            0.04
+Shortest transaction:           0.00
+
+
+__________________________________________________________________
+
+siege -f /home/django/django/urls.txt -d1 -r15 -c15
+
+Transactions:                   1560 hits
+Availability:                  97.20 %
+Elapsed time:                  72.66 secs
+Data transferred:              53.44 MB
+Response time:                  0.01 secs
+Transaction rate:              21.47 trans/sec
+Throughput:                     0.74 MB/sec
+Concurrency:                    0.14
+Successful transactions:        1545
+Failed transactions:              45
+Longest transaction:            0.24
+Shortest transaction:           0.00
+
+
+__________________________________________________________________
+
+siege -f /home/django/django/urls.txt -d1 -r10 -c10
+
+Transactions:                    680 hits
+Availability:                  97.56 %
+Elapsed time:                  36.71 secs
+Data transferred:              24.33 MB
+Response time:                  0.01 secs
+Transaction rate:              18.52 trans/sec
+Throughput:                     0.66 MB/sec
+Concurrency:                    0.13
+Successful transactions:         672
+Failed transactions:              17
+Longest transaction:            0.21
+Shortest transaction:           0.00

@@ -12,7 +12,7 @@ from mainapp.models import Product
 def basket(request):
     title = 'корзина'
     basket_items = Basket.objects.filter(
-        user=request.user).order_by('product__category')
+        user=request.user).order_by('product__category').select_related()
     content = {
         'title': title,
         'basket_items': basket_items
@@ -46,14 +46,9 @@ def add(request, pk):
 
 
 @login_required
-def delete_ajax(request, pk, quantity):
+def delete_ajax(request, pk):
     if request.is_ajax():
         basket_for_delete = Basket.objects.get(pk=pk)
-        basket_for_delete.quantity = quantity
-        basket_for_delete.save()
-        product_quantity = Product.objects.get(basket__user_id=request.user.id).quantity
-        product_quantity += basket_for_delete.quantity
-        basket_for_delete.save()
         basket_for_delete.delete()
 
     basket_items = Basket.objects.filter(
