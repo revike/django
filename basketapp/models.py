@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.db import models
+from django.utils.functional import cached_property
+
 from mainapp.models import Product
 
 
@@ -27,17 +29,21 @@ class Basket(models.Model):
     def product_cost(self):
         return self.quantity * self.product.price
 
+    @cached_property
+    def items_cached(self):
+        return self.user.basket.select_related()
+
     @property
     def total_quantity(self):
         """Общее количество"""
-        _items = Basket.objects.filter(user=self.user)
+        _items = self.items_cached
         _total_quantity = sum(list(map(lambda x: x.quantity, _items)))
         return _total_quantity
 
     @property
     def total_cost(self):
         """Общая сумма"""
-        _items = Basket.objects.filter(user=self.user)
+        _items = self.items_cached
         _total_cost = sum(list(map(lambda x: x.product_cost, _items)))
         return _total_cost
 
@@ -45,6 +51,10 @@ class Basket(models.Model):
     #     self.product.quantity += self.quantity
     #     self.product.save()
 
+    # @staticmethod
+    # def get_item(pk):
+    #     return Basket.objects.get(pk=pk)
+
     @staticmethod
-    def get_item(pk):
-        return Basket.objects.get(pk=pk)
+    def get_item(user):
+        return Basket.objects.filter(user=user).order_by('product__category')

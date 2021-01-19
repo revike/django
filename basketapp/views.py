@@ -3,11 +3,13 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.views.decorators.cache import never_cache
 
 from basketapp.models import Basket
 from mainapp.models import Product
 
 
+# @never_cache - откл кэширования
 @login_required
 def basket(request):
     title = 'корзина'

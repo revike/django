@@ -3,13 +3,38 @@ import os
 import random
 
 from django.conf import settings
+from django.core.cache import cache
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.views.generic import ListView
+from django.views.decorators.cache import cache_page, never_cache
 
 from mainapp.models import Product, ProductCategory
 
 # Create your views here.
+
+
+def get_links_menu():
+    if settings.LOW_CACHE:
+        key = 'links_menu'
+        links_menu = cache.get(key)
+        if links_menu is None:
+            links_menu = ProductCategory.objects.filter(is_active=True)
+            cache.set(key, links_menu)
+        return links_menu
+    else:
+        return ProductCategory.objects.filter(is_active=True)
+
+
+def get_category(pk):
+    if settings.LOW_CACHE:
+        key = f'category_{pk}'
+        category = cache.get(key)
+        if category is None:
+            category = get_object_or_404(ProductCategory, pk=pk)
+            cache.set(key, category)
+        return category
+    else:
+        return get_object_or_404(ProductCategory, pk=pk)
 
 
 def get_hot_product():
@@ -23,7 +48,6 @@ def get_same_products(hot_product):
 
 def main(request):
     title = 'главная'
-    # products = Product.objects.filter(is_active=True)[:4]
     products = Product.objects.filter(is_active=True, category__is_active=True).select_related('category')[:4]
 
     content = {
@@ -33,9 +57,11 @@ def main(request):
     return render(request, 'mainapp/index.html', content)
 
 
+# @never_cache - откл кэширования
+# @cache_page(3600)
 def products(request, pk=None, page=1):
     title = 'продукты'
-    links_menu = ProductCategory.objects.filter(is_active=True)
+    links_menu = get_links_menu()
 
     if pk is not None:
         if pk == 0:
@@ -45,7 +71,7 @@ def products(request, pk=None, page=1):
                 'pk': 0
             }
         else:
-            category = get_object_or_404(ProductCategory, pk=pk)
+            category = get_category(pk)
             products_list = Product.objects.filter(category__pk=pk, is_active=True)
 
         paginator = Paginator(products_list, 4)
