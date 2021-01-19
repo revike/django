@@ -1,0 +1,12 @@
+http://194.67.104.210/products/
+http://194.67.104.210/
+http://194.67.104.210/products/category/1
+http://194.67.104.210/products/product/1
+http://194.67.104.210/products/category/2
+http://194.67.104.210/products/product/2
+http://194.67.104.210/products/category/3
+http://194.67.104.210/products/product/3
+http://194.67.104.210/products/category/4
+http://194.67.104.210/products/product/4
+http://194.67.104.210/order/
+http://194.67.104.210/admin/users/read/
