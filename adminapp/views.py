@@ -1,3 +1,5 @@
+from django.db.models import F
+
 from authapp.forms import ShopUserEditForm, ShopUserRegisterForm
 from authapp.models import ShopUser
 from django.contrib.auth.decorators import user_passes_test
@@ -246,6 +248,15 @@ class ProductCategoryUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'категория/редактирование'
         return context
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+                # db_profile_by_type(self.__class__, 'UPDATE', connection.queries)
+        return super().form_valid(form)
+
 
 
 # @user_passes_test(lambda u: u.is_superuser)

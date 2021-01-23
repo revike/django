@@ -4,6 +4,7 @@ import random
 
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.views.decorators.cache import cache_page, never_cache
@@ -73,6 +74,7 @@ def products(request, pk=None, page=1):
         else:
             category = get_category(pk)
             products_list = Product.objects.filter(category__pk=pk, is_active=True)
+            # products_list = Product.objects.filter(Q(category__pk=1) | Q(category__pk=1), is_active=True)
 
         paginator = Paginator(products_list, 4)
         try:
