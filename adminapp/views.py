@@ -13,6 +13,7 @@ from mainapp.models import Product, ProductCategory
 
 from adminapp.forms import (ProductCategoryEditForm, ProductEditForm)
 
+
 # users
 
 
@@ -48,6 +49,7 @@ class UserCreateView(CreateView):
         context['title'] = 'создание пользователя'
         return context
 
+
 # @user_passes_test(lambda u: u.is_superuser)
 # def users(request):
 #     users_list = ShopUser.objects.all().order_by('-is_active')
@@ -60,6 +62,7 @@ class UserCreateView(CreateView):
 class UsersListView(ListView):
     model = ShopUser
     template_name = 'adminapp/users.html'
+
     # paginate_by = 2 - пагинация
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
@@ -70,6 +73,7 @@ class UsersListView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'пользователи'
         return context
+
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def user_update(request, pk):
@@ -258,7 +262,6 @@ class ProductCategoryUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-
 # @user_passes_test(lambda u: u.is_superuser)
 # def category_delete(request, pk):
 #     title = 'категории/удаление'
@@ -286,8 +289,10 @@ class ProductCategoryDeleteView(DeleteView):
         self.object = self.get_object()
         if self.object.is_active == True:
             self.object.is_active = False
+            self.object.product_set.update(is_active=False)
         else:
             self.object.is_active = True
+            self.object.product_set.update(is_active=True)
         self.object.save()
 
         return HttpResponseRedirect(self.get_success_url())
@@ -344,6 +349,7 @@ class ProductCreateView(CreateView):
         succsess_url = reverse('adminapp:products', args=[category_pk])
         return succsess_url
 
+
 # @user_passes_test(lambda u: u.is_superuser)
 # def products(request, pk):
 #     category_item = get_object_or_404(ProductCategory, pk=pk)
@@ -375,6 +381,7 @@ class ProductListView(ListView):
         context_data['category'] = category_item
         context_data['title'] = 'продукты'
         return context_data
+
 
 # @user_passes_test(lambda u: u.is_superuser)
 # def product_read(request, pk):
